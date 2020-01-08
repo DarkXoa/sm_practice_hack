@@ -41,8 +41,8 @@ init_sram:
 {
     ; Controllers
     LDA #$3000 : STA !sram_ctrl_menu        ; Start + Select
-    LDA #$6010 : STA !sram_ctrl_save_state  ; Select + Y + R
-    LDA #$6020 : STA !sram_ctrl_load_state  ; Select + Y + L
+    LDA #$0040 : STA !sram_ctrl_save_state  ; X
+    LDA #$4000 : STA !sram_ctrl_load_state  ; Y
     LDA #$A020 : STA !sram_ctrl_load_last_preset  ; Select + B + L
     LDA #$0000 : STA !sram_ctrl_full_equipment
     LDA #$0000 : STA !sram_ctrl_kill_enemies
