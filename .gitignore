@@ -9,3 +9,9 @@ tools/*.asm
 tools/*.log
 .vscode/launch.json
 .vscode/tasks.json
+src/asar.exe
+src/dll/asar.dll
+src/dll/bindings/c/asardll.c
+src/dll/bindings/c/asardll.h
+src/dll/bindings/c_sharp/asar.cs
+src/dll/bindings/python/asar.py
