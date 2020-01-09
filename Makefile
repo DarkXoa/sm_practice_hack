@@ -10,6 +10,12 @@ smhackkpdr25:
 smhackgtclassic:
 	cp resources/sm_orig.sfc build/smhack20_gtclassic.sfc && cd src && asar --no-title-check -DFEATURE_SD2SNES=0 -DCATEGORY=3 main.asm ../build/smhack20_gtclassic.sfc && cd -
 
+smhackspazer:
+	cp resources/sm_orig.sfc build/smhack20_spazer.sfc && cd src && asar --no-title-check -DFEATURE_SD2SNES=0 -DCATEGORY=4 main.asm ../build/smhack20_spazer.sfc && cd -
+
+darkxoa:
+	cp resources/sm_orig.sfc build/InfoHUD_2.0.8a_DarkXoa.sfc && cd src && asar --no-title-check -DFEATURE_SD2SNES=0 -DCATEGORY=5 main.asm ../build/InfoHUD_2.0.8a_DarkXoa.sfc && cd -
+
 sd2snes:
 	cp resources/sm_orig.sfc build/smhack20_sd2snes.sfc && cd src && asar --no-title-check -DFEATURE_SD2SNES=1 -DCATEGORY=0 main.asm ../build/smhack20_sd2snes.sfc && cd -
 
@@ -22,4 +28,10 @@ sd2sneskpdr25:
 sd2snesgtclassic:
 	cp resources/sm_orig.sfc build/smhack20_sd2snes_gtclassic.sfc && cd src && asar --no-title-check -DFEATURE_SD2SNES=1 -DCATEGORY=3 main.asm ../build/smhack20_sd2snes_gtclassic.sfc && cd -
 
-all: sd2snes smhack sd2snesrbo smhackrbo sd2sneskpdr25 smhackkpdr25 sd2snesgtclassic smhackgtclassic
+sd2snesspazer:
+	cp resources/sm_orig.sfc build/smhack20_sd2snes_spazer.sfc && cd src && asar --no-title-check -DFEATURE_SD2SNES=1 -DCATEGORY=4 main.asm ../build/smhack20_sd2snes_spazer.sfc && cd -
+
+sd2snesdarkxoa:
+	cp resources/sm_orig.sfc build/InfoHUD_SD2SNES_2.0.8a_DarkXoa.sfc && cd src && asar --no-title-check -DFEATURE_SD2SNES=1 -DCATEGORY=5 main.asm ../build/InfoHUD_SD2SNES_2.0.8a_DarkXoa.sfc && cd -
+
+all: sd2snes smhack sd2snesrbo smhackrbo sd2sneskpdr25 smhackkpdr25 sd2snesgtclassic smhackgtclassic sd2snesspazer smhackspazer sd2snesdarkxoa darkxoa

@@ -92,6 +92,11 @@ preset_category_submenus:
         dw #PresetsMenuKpdr25
     elseif !CATEGORY == !category_gtclassic
         dw #PresetsMenuGtclassic
+    elseif !CATEGORY == !category_spazer
+        dw #PresetsMenuSpazer
+    elseif !CATEGORY == !category_darkxoa
+        dw #PresetsMenuSpazer
+        dw #PresetsMenuGtclassic
     else
         error "Unsupported category"
     endif
@@ -112,7 +117,7 @@ MainMenu:
     dw #mm_goto_rngmenu
     dw #mm_goto_ctrlsmenu
     dw #$0000
-    %cm_header("SM PRACTICE HACK 2.0.8")
+    %cm_header("DARKXOA INFOHUD 2.0.8")
 
 mm_goto_equipment:
     %cm_submenu("Equipment", #EquipmentMenu)
@@ -153,6 +158,11 @@ elseif !CATEGORY == !category_rbo
 elseif !CATEGORY == !category_kpdr25
     incsrc presets/kpdr25_menu.asm
 elseif !CATEGORY == !category_gtclassic
+    incsrc presets/gtclassic_menu.asm
+elseif !CATEGORY == !category_spazer
+    incsrc presets/spazer_menu.asm
+elseif !CATEGORY == !category_darkxoa
+    incsrc presets/spazer_menu.asm
     incsrc presets/gtclassic_menu.asm
 else
     error "Unsupported category"
@@ -614,6 +624,11 @@ misc_preset_cateory:
     elseif !CATEGORY == !category_kpdr25
         db #$28, "y    KPDR25", #$FF
     elseif !CATEGORY == !category_gtclassic
+        db #$28, "y GTCLASSIC", #$FF
+    elseif !CATEGORY == !category_spazer
+        db #$28, "y    SPAZER", #$FF
+    elseif !CATEGORY == !category_darkxoa
+        db #$28, "y ANY% KPDR", #$FF
         db #$28, "y GTCLASSIC", #$FF
     else
         error "Unsupported category"

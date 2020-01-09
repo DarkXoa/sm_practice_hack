@@ -145,6 +145,8 @@
 !category_rbo = 1
 !category_kpdr25 = 2
 !category_gtclassic = 3
+!category_spazer = 4
+!category_darkxoa = 5
 
 ; ----------
 ; Save/load
