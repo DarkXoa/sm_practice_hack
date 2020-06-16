@@ -29,6 +29,12 @@ export class Changelog extends Component {
                                                 <li>Add X Position and Y Position to the Infohud Mode options. (2.0.7)</li>
                                                 <li>Add support for a GT Classic preset (2.0.8)</li>
                                                 <li>Add support for a KPDR preset using the standard 21% route (3 tank, 20/10/5) (2.0.9)</li>
+                                                <li>Move KPDR 21% presets to the combined ROM. (2.0.10)</li>
+                                                <li>Add cooldown timer to the Infohud Mode options. (2.0.11)</li>
+                                                <li>Add support for 14% Ice presets. (2.0.12)</li>
+                                                <li>Included all preset categories in the sam ROM (2.0.13)</li>
+                                                <li>Add support for 14% Speed and Any% All Bosses (multiple routes). (2.0.14)</li>
+                                                <li>Add support for 100% Early Croc route. Changed default shortcut for Load Preset. (2.0.15)</li>
                                             </ul>
                                         </CardBody>
                                     </Card>

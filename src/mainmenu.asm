@@ -69,9 +69,13 @@ action_submenu:
 
 action_presets_submenu:
 {
-    ; Increment stack pointer by 2, then store current menu
+    ; Increment stack pointer by 2, then store current menu    
     LDA !ram_cm_stack_index : INC #2 : STA !ram_cm_stack_index : TAX
-    LDA !sram_preset_category : ASL : TAY : LDA.w preset_category_submenus,Y : STA !ram_cm_menu_stack,X
+    LDA !sram_preset_category : ASL : TAY
+    
+    LDA.w preset_category_submenus,Y : STA !ram_cm_menu_stack,X
+    LDA.w preset_category_banks,Y : STA !ram_cm_menu_bank
+    
     LDA #$0000 : STA !ram_cm_cursor_stack,X
 
     LDA #!SOUND_MENU_MOVE : JSL $80903F
@@ -83,20 +87,37 @@ action_presets_submenu:
 
 preset_category_submenus:
 {
-    if !CATEGORY == !category_combined
-        dw #PresetsMenuPrkd
-        dw #PresetsMenuHundo
-    elseif !CATEGORY == !category_rbo
-        dw #PresetsMenuRbo
-    elseif !CATEGORY == !category_kpdr25
-        dw #PresetsMenuKpdr25
-    elseif !CATEGORY == !category_gtclassic
-        dw #PresetsMenuGtclassic
-    elseif !CATEGORY == !category_kpdr21
-        dw #PresetsMenuKpdr21
-    else
-        error "Unsupported category"
-    endif
+    dw #PresetsMenuPrkd
+    dw #PresetsMenuKpdr21
+    dw #PresetsMenuHundo
+    dw #PresetsMenu100early
+    dw #PresetsMenuRbo
+    dw #PresetsMenuKpdr25
+    dw #PresetsMenuGtclassic
+    dw #PresetsMenu14ice
+    dw #PresetsMenu14speed
+    dw #PresetsMenuAllbosskpdr
+    dw #PresetsMenuAllbosspkdr
+    dw #PresetsMenuAllbossprkd    
+    dw #$0000
+}
+
+preset_category_banks:
+{
+    dw #PresetsMenuPrkd>>16
+    dw #PresetsMenuKpdr21>>16
+    dw #PresetsMenuHundo>>16
+    dw #PresetsMenu100early>>16
+    dw #PresetsMenuRbo>>16
+    dw #PresetsMenuKpdr25>>16
+    dw #PresetsMenuGtclassic>>16
+    dw #PresetsMenu14ice>>16
+    dw #PresetsMenu14speed>>16
+    dw #PresetsMenuAllbosskpdr>>16
+    dw #PresetsMenuAllbosspkdr>>16
+    dw #PresetsMenuAllbossprkd>>16
+    dw #$0000
+
 }
 
 ; -----------
@@ -114,7 +135,7 @@ MainMenu:
     dw #mm_goto_rngmenu
     dw #mm_goto_ctrlsmenu
     dw #$0000
-    %cm_header("SM PRACTICE HACK 2.0.9")
+    %cm_header("SM PRACTICE HACK 2.0.15")
 
 mm_goto_equipment:
     %cm_submenu("Equipment", #EquipmentMenu)
@@ -147,20 +168,25 @@ mm_goto_ctrlsmenu:
 ; -------------
 ; Presets menu
 ; -------------
-if !CATEGORY == !category_combined
-    incsrc presets/prkd_menu.asm
-    incsrc presets/hundo_menu.asm
-elseif !CATEGORY == !category_rbo
-    incsrc presets/rbo_menu.asm
-elseif !CATEGORY == !category_kpdr25
-    incsrc presets/kpdr25_menu.asm
-elseif !CATEGORY == !category_gtclassic
-    incsrc presets/gtclassic_menu.asm
-elseif !CATEGORY == !category_kpdr21
-    incsrc presets/kpdr21_menu.asm
-else
-    error "Unsupported category"
-endif
+pushpc
+
+org $fe8000
+incsrc presets/prkd_menu.asm
+incsrc presets/kpdr21_menu.asm
+incsrc presets/hundo_menu.asm
+incsrc presets/100early_menu.asm
+incsrc presets/rbo_menu.asm
+incsrc presets/kpdr25_menu.asm
+incsrc presets/gtclassic_menu.asm
+
+org $ff8000
+incsrc presets/14ice_menu.asm
+incsrc presets/14speed_menu.asm
+incsrc presets/allbosskpdr_menu.asm
+incsrc presets/allbosspkdr_menu.asm
+incsrc presets/allbossprkd_menu.asm
+
+pullpc
 
 action_load_preset:
 {
@@ -605,20 +631,18 @@ misc_preset_cateory:
     dl #!sram_preset_category
     dw #$0000
     db #$28, "Preset Category", #$FF
-    if !CATEGORY == !category_combined
         db #$28, "y      PRKD", #$FF ; Note the "y" ;)
-        db #$28, "y     HUNDO", #$FF
-    elseif !CATEGORY == !category_rbo
+        db #$28, "y      KPDR", #$FF
+        db #$28, "y  100 LATE", #$FF
+        db #$28, "y 100 EARLY", #$FF
         db #$28, "y       RBO", #$FF
-    elseif !CATEGORY == !category_kpdr25
         db #$28, "y    KPDR25", #$FF
-    elseif !CATEGORY == !category_gtclassic
         db #$28, "y GTCLASSIC", #$FF
-    elseif !CATEGORY == !category_kpdr21
-        db #$28, "y    KPDR21", #$FF
-    else
-        error "Unsupported category"
-    endif
+        db #$28, "y    14 ICE", #$FF
+        db #$28, "y  14 SPEED", #$FF
+        db #$28, "y  ALL KPDR", #$FF
+        db #$28, "y  ALL PKDR", #$FF
+        db #$28, "y  ALL PRKD", #$FF
     db #$FF
 
 
@@ -793,6 +817,7 @@ ih_display_mode:
     db #$28, "LAG COUNTER", #$FF
     db #$28, " X POSITION", #$FF
     db #$28, " Y POSITION", #$FF
+    db #$28, "   COOLDOWN", #$FF
     db #$FF
 
 ih_room_counter:
