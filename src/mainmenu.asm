@@ -87,13 +87,14 @@ action_presets_submenu:
 
 preset_category_submenus:
 {
-    dw #PresetsMenuPrkd
+    dw #PresetsMenuSpazer
+    dw #PresetsMenuGtclassic
     dw #PresetsMenuKpdr21
+    dw #PresetsMenuPrkd
     dw #PresetsMenuHundo
     dw #PresetsMenu100early
     dw #PresetsMenuRbo
     dw #PresetsMenuKpdr25
-    dw #PresetsMenuGtclassic
     dw #PresetsMenu14ice
     dw #PresetsMenu14speed
     dw #PresetsMenuAllbosskpdr
@@ -104,13 +105,14 @@ preset_category_submenus:
 
 preset_category_banks:
 {
-    dw #PresetsMenuPrkd>>16
+    dw #PresetsMenuSpazer>>16
+    dw #PresetsMenuGtclassic>>16
     dw #PresetsMenuKpdr21>>16
+    dw #PresetsMenuPrkd>>16
     dw #PresetsMenuHundo>>16
     dw #PresetsMenu100early>>16
     dw #PresetsMenuRbo>>16
     dw #PresetsMenuKpdr25>>16
-    dw #PresetsMenuGtclassic>>16
     dw #PresetsMenu14ice>>16
     dw #PresetsMenu14speed>>16
     dw #PresetsMenuAllbosskpdr>>16
@@ -135,7 +137,7 @@ MainMenu:
     dw #mm_goto_rngmenu
     dw #mm_goto_ctrlsmenu
     dw #$0000
-    %cm_header("SM PRACTICE HACK 2.0.15")
+    %cm_header("DARKXOA INFOHUD 2.0.15")
 
 mm_goto_equipment:
     %cm_submenu("Equipment", #EquipmentMenu)
@@ -185,6 +187,7 @@ incsrc presets/14speed_menu.asm
 incsrc presets/allbosskpdr_menu.asm
 incsrc presets/allbosspkdr_menu.asm
 incsrc presets/allbossprkd_menu.asm
+incsrc presets/spazer_menu.asm
 
 pullpc
 
@@ -631,18 +634,19 @@ misc_preset_cateory:
     dl #!sram_preset_category
     dw #$0000
     db #$28, "Preset Category", #$FF
-        db #$28, "y      PRKD", #$FF ; Note the "y" ;)
-        db #$28, "y      KPDR", #$FF
+        db #$28, "y    SPAZER", #$FF
+        db #$28, "y GTCLASSIC", #$FF
+        db #$28, "y  ANY KPDR", #$FF
+        db #$28, "y  ANY PRKD", #$FF ; Note the "y" ;)
         db #$28, "y  100 LATE", #$FF
         db #$28, "y 100 EARLY", #$FF
         db #$28, "y       RBO", #$FF
-        db #$28, "y    KPDR25", #$FF
-        db #$28, "y GTCLASSIC", #$FF
+        db #$28, "y ANY BEGIN", #$FF
         db #$28, "y    14 ICE", #$FF
         db #$28, "y  14 SPEED", #$FF
-        db #$28, "y  ALL KPDR", #$FF
-        db #$28, "y  ALL PKDR", #$FF
-        db #$28, "y  ALL PRKD", #$FF
+        db #$28, "y BOSS KPDR", #$FF
+        db #$28, "y BOSS PKDR", #$FF
+        db #$28, "y BOSS PRKD", #$FF
     db #$FF
 
 
