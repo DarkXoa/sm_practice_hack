@@ -69,9 +69,13 @@ action_submenu:
 
 action_presets_submenu:
 {
-    ; Increment stack pointer by 2, then store current menu
+    ; Increment stack pointer by 2, then store current menu    
     LDA !ram_cm_stack_index : INC #2 : STA !ram_cm_stack_index : TAX
-    LDA !sram_preset_category : ASL : TAY : LDA.w preset_category_submenus,Y : STA !ram_cm_menu_stack,X
+    LDA !sram_preset_category : ASL : TAY
+    
+    LDA.w preset_category_submenus,Y : STA !ram_cm_menu_stack,X
+    LDA.w preset_category_banks,Y : STA !ram_cm_menu_bank
+    
     LDA #$0000 : STA !ram_cm_cursor_stack,X
 
     LDA #!SOUND_MENU_MOVE : JSL $80903F
@@ -83,23 +87,37 @@ action_presets_submenu:
 
 preset_category_submenus:
 {
-    if !CATEGORY == !category_combined
-        dw #PresetsMenuPrkd
-        dw #PresetsMenuHundo
-    elseif !CATEGORY == !category_rbo
-        dw #PresetsMenuRbo
-    elseif !CATEGORY == !category_kpdr25
-        dw #PresetsMenuKpdr25
-    elseif !CATEGORY == !category_gtclassic
-        dw #PresetsMenuGtclassic
-    elseif !CATEGORY == !category_spazer
-        dw #PresetsMenuSpazer
-    elseif !CATEGORY == !category_darkxoa
-        dw #PresetsMenuSpazer
-        dw #PresetsMenuGtclassic
-    else
-        error "Unsupported category"
-    endif
+    dw #PresetsMenuPrkd
+    dw #PresetsMenuKpdr21
+    dw #PresetsMenuHundo
+    dw #PresetsMenu100early
+    dw #PresetsMenuRbo
+    dw #PresetsMenuKpdr25
+    dw #PresetsMenuGtclassic
+    dw #PresetsMenu14ice
+    dw #PresetsMenu14speed
+    dw #PresetsMenuAllbosskpdr
+    dw #PresetsMenuAllbosspkdr
+    dw #PresetsMenuAllbossprkd    
+    dw #$0000
+}
+
+preset_category_banks:
+{
+    dw #PresetsMenuPrkd>>16
+    dw #PresetsMenuKpdr21>>16
+    dw #PresetsMenuHundo>>16
+    dw #PresetsMenu100early>>16
+    dw #PresetsMenuRbo>>16
+    dw #PresetsMenuKpdr25>>16
+    dw #PresetsMenuGtclassic>>16
+    dw #PresetsMenu14ice>>16
+    dw #PresetsMenu14speed>>16
+    dw #PresetsMenuAllbosskpdr>>16
+    dw #PresetsMenuAllbosspkdr>>16
+    dw #PresetsMenuAllbossprkd>>16
+    dw #$0000
+
 }
 
 ; -----------
@@ -117,7 +135,7 @@ MainMenu:
     dw #mm_goto_rngmenu
     dw #mm_goto_ctrlsmenu
     dw #$0000
-    %cm_header("DARKXOA INFOHUD 2.0.8")
+    %cm_header("SM PRACTICE HACK 2.0.15")
 
 mm_goto_equipment:
     %cm_submenu("Equipment", #EquipmentMenu)
@@ -150,23 +168,25 @@ mm_goto_ctrlsmenu:
 ; -------------
 ; Presets menu
 ; -------------
-if !CATEGORY == !category_combined
-    incsrc presets/prkd_menu.asm
-    incsrc presets/hundo_menu.asm
-elseif !CATEGORY == !category_rbo
-    incsrc presets/rbo_menu.asm
-elseif !CATEGORY == !category_kpdr25
-    incsrc presets/kpdr25_menu.asm
-elseif !CATEGORY == !category_gtclassic
-    incsrc presets/gtclassic_menu.asm
-elseif !CATEGORY == !category_spazer
-    incsrc presets/spazer_menu.asm
-elseif !CATEGORY == !category_darkxoa
-    incsrc presets/spazer_menu.asm
-    incsrc presets/gtclassic_menu.asm
-else
-    error "Unsupported category"
-endif
+pushpc
+
+org $fe8000
+incsrc presets/prkd_menu.asm
+incsrc presets/kpdr21_menu.asm
+incsrc presets/hundo_menu.asm
+incsrc presets/100early_menu.asm
+incsrc presets/rbo_menu.asm
+incsrc presets/kpdr25_menu.asm
+incsrc presets/gtclassic_menu.asm
+
+org $ff8000
+incsrc presets/14ice_menu.asm
+incsrc presets/14speed_menu.asm
+incsrc presets/allbosskpdr_menu.asm
+incsrc presets/allbosspkdr_menu.asm
+incsrc presets/allbossprkd_menu.asm
+
+pullpc
 
 action_load_preset:
 {
@@ -268,46 +288,42 @@ eq_setpbs:
 ; ---------------------
 
 ToggleCategoryMenu:
-    dw #cat_early
-    dw #cat_KPDR_wave
-    dw #cat_KPDR_phantoon
-    dw #cat_KPDR_maridia
-    dw #cat_KPDR_draygon
-    dw #cat_KPDR_norfairrevisit
-    dw #cat_KPDR_ridley
-    dw #cat_lavadive
+    dw #cat_100
+    dw #cat_any_new
+    dw #cat_any_old
+    dw #cat_14ice
+    dw #cat_14speed
     dw #cat_gt_code
+    dw #cat_rbo
+    dw #cat_any_glitched
     dw #cat_nothing
     dw #$0000
     %cm_header("TOGGLE CATEGORY")
 
 
-cat_early:
-    %cm_jsr("Early Game", action_category, #$0000)
+cat_100:
+    %cm_jsr("100%", action_category, #$0000)
 
-cat_KPDR_wave:
-    %cm_jsr("KPDR Hero Shot - Bowling Spark", action_category, #$0001)
+cat_any_new:
+    %cm_jsr("Any% PRKD", action_category, #$0001)
 
-cat_KPDR_phantoon:
-    %cm_jsr("KPDR Phantoon", action_category, #$0002)
+cat_any_old:
+    %cm_jsr("Any% KPDR", action_category, #$0002)
 
-cat_KPDR_maridia:
-    %cm_jsr("KPDR Maridia", action_category, #$0000)
+cat_14ice:
+    %cm_jsr("14% Ice", action_category, #$0003)
 
-cat_KPDR_draygon:
-    %cm_jsr("KPDR Draygon", action_category, #$0003)
-
-cat_KPDR_norfairrevisit:
-    %cm_jsr("KPDR Ice Escape - Ridley", action_category, #$0004)
-
-cat_KPDR_ridley:
-    %cm_jsr("KPDR Ridley - Tourian", action_category, #$0006)
-
-cat_lavadive:
-    %cm_jsr("Lavadive", action_category, #$0001)
+cat_14speed:
+    %cm_jsr("14% Speed", action_category, #$0004)
 
 cat_gt_code:
     %cm_jsr("GT Code", action_category, #$0005)
+
+cat_rbo:
+    %cm_jsr("RBO", action_category, #$0006)
+
+cat_any_glitched:
+    %cm_jsr("Any% glitched", action_category, #$0007)
 
 cat_nothing:
     %cm_jsr("Nothing", action_category, #$0008)
@@ -350,16 +366,15 @@ action_category:
 
   .table
     ;  Items,  Beams,  Health, Miss,   Supers, PBs,    Reserv, Dummy
-	DW #$1004, #$0000, #$0063, #$000A, #$0000, #$0000, #$0000, #$0000		;   early game basics
-	DW #$3105, #$1005, #$018F, #$0014, #$0005, #$0000, #$0000, #$0000		;   any% KPDR wave
-	DW #$3105, #$1005, #$018F, #$0014, #$0005, #$0005, #$0000, #$0000		;   any% KPDR phantoon
-	DW #$3125, #$1005, #$018F, #$0014, #$000A, #$0005, #$0000, #$0000		;   any% KPDR maridia
-	DW #$3125, #$1005, #$01F3, #$0014, #$000F, #$0005, #$0000, #$0000		;   any% KPDR draygon
-	DW #$3325, #$100D, #$01F3, #$0014, #$000F, #$0005, #$0000, #$0000		;   any% KPDR norfair revisit
-	DW #$3325, #$100F, #$01F3, #$0014, #$000F, #$0005, #$0000, #$0000		;   any% KPDR ridley
-	DW #$1105, #$0000, #$018F, #$000A, #$0005, #$0005, #$0000, #$0000		;   lavadive
-	DW #$F32F, #$100F, #$02BC, #$0064, #$0014, #$0014, #$012C, #$0000		;   gt code
-	DW #$0000, #$0000, #$0063, #$0000, #$0000, #$0000, #$0000, #$0000		;   nothing
+    dw #$F32F, #$100F, #$05db, #$00E6, #$0032, #$0032, #$0190, #$0000        ;    100%
+    dw #$3125, #$1007, #$018F, #$000F, #$000A, #$0005, #$0000, #$0000        ;    any% new
+    dw #$3325, #$100B, #$018F, #$000F, #$000A, #$0005, #$0000, #$0000        ;   any% old
+    dw #$1025, #$1002, #$018F, #$000A, #$000A, #$0005, #$0000, #$0000        ;    14% ice
+    dw #$3025, #$1000, #$018F, #$000A, #$000A, #$0005, #$0000, #$0000        ;    14% speed
+    dw #$F32F, #$100F, #$02BC, #$0064, #$0014, #$0014, #$012C, #$0000        ;   gt code
+    dw #$710C, #$1001, #$031F, #$001E, #$0019, #$0014, #$0064, #$0000        ;   rbo
+    dw #$9004, #$0000, #$00C7, #$0005, #$0005, #$0005, #$0000, #$0000        ;    any% glitched
+    dw #$0000, #$0000, #$0063, #$0000, #$0000, #$0000, #$0000, #$0000        ;   nothing
 }
 
 
@@ -616,23 +631,18 @@ misc_preset_cateory:
     dl #!sram_preset_category
     dw #$0000
     db #$28, "Preset Category", #$FF
-    if !CATEGORY == !category_combined
         db #$28, "y      PRKD", #$FF ; Note the "y" ;)
-        db #$28, "y     HUNDO", #$FF
-    elseif !CATEGORY == !category_rbo
+        db #$28, "y      KPDR", #$FF
+        db #$28, "y  100 LATE", #$FF
+        db #$28, "y 100 EARLY", #$FF
         db #$28, "y       RBO", #$FF
-    elseif !CATEGORY == !category_kpdr25
         db #$28, "y    KPDR25", #$FF
-    elseif !CATEGORY == !category_gtclassic
         db #$28, "y GTCLASSIC", #$FF
-    elseif !CATEGORY == !category_spazer
-        db #$28, "y    SPAZER", #$FF
-    elseif !CATEGORY == !category_darkxoa
-        db #$28, "y ANY% KPDR", #$FF
-        db #$28, "y GTCLASSIC", #$FF
-    else
-        error "Unsupported category"
-    endif
+        db #$28, "y    14 ICE", #$FF
+        db #$28, "y  14 SPEED", #$FF
+        db #$28, "y  ALL KPDR", #$FF
+        db #$28, "y  ALL PKDR", #$FF
+        db #$28, "y  ALL PRKD", #$FF
     db #$FF
 
 
@@ -807,6 +817,7 @@ ih_display_mode:
     db #$28, "LAG COUNTER", #$FF
     db #$28, " X POSITION", #$FF
     db #$28, " Y POSITION", #$FF
+    db #$28, "   COOLDOWN", #$FF
     db #$FF
 
 ih_room_counter:

@@ -12,6 +12,7 @@
 
 !ram_slowdown_mode = $7EFFFC
 !ram_slowdown_frames = $7FFB52
+!ram_cooldown_counter = $7FFB32
 !ram_xpos = $7FFB34
 !ram_ypos = $7FFB36
 !ram_dash_counter = $7FFB38
@@ -96,6 +97,7 @@
 !ram_cm_cursor_max = $7FFFF2
 !ram_cm_input_timer = $7FFFF4
 !ram_cm_controller = $7FFFF6
+!ram_cm_menu_bank = $7FFFF8
 
 !ram_cm_etanks = $7FFB90
 !ram_cm_reserve = $7FFB92
@@ -145,8 +147,8 @@
 !category_rbo = 1
 !category_kpdr25 = 2
 !category_gtclassic = 3
-!category_spazer = 4
-!category_darkxoa = 5
+!category_14low = 4
+!category_allboss = 5
 
 ; ----------
 ; Save/load
